@@ -2,10 +2,20 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta name="keywords" content="go-ci" />
+
+    <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet">
+    <% } %>
   </head>
   <body>
     <div id="root"></div>
-    <script src="../dist/bundle.js"></script>
+    <script type="text/javascript">console.log("lllllll");</script>
+
+    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <div>asdfasdfasf</div>
+    <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+    <% } %>
   </body>
 </html>
