@@ -2,40 +2,6 @@
 const join = require('path').join;
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-const PageGeneratorPlugin = function() {};
-
-PageGeneratorPlugin.prototype.apply = function(compiler) {
-  const emitHtml = this.emitHtml.bind(this);
-  compiler.plugin('emit', (compilation, callback) => {
-    const bundleName = compilation.namedChunks.main.files[0];
-    const code = compilation.assets[bundleName].source();
-    const indexHtml = compilation.assets['default.html'].source();
-    const exports = {};
-    const window = {};
-    const module = {
-      exports, // to bypass linter's unused variables checking
-      window   // to bypass linter's unused variables checking
-    };
-    eval(code); // eslint-disable-line no-eval
-
-    const NSApp = module.exports;
-    const paths = ['/browser_not_supported.html'];
-
-    const promises = paths.map(path => new Promise(resolve => {
-      NSApp.start({
-        path,
-        callback(html, pageMeta) {
-          emitHtml(path, html, pageMeta, indexHtml, compilation);
-          resolve(html);
-        }
-      });
-    }));
-
-    Promise.all(promises).then(() => callback());
-  });
-};
 
 const plugins = [
   new webpack.NoErrorsPlugin(),
